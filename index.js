@@ -1,5 +1,6 @@
 //console.log("Hola Mundo");
 
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const { pokemon } = require('./pokedex.json');
@@ -13,8 +14,15 @@ const { pokemon } = require('./pokedex.json');
  * DELETE
  */
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended:true }));
+
 app.get('/',(req, res, next) =>{
     return res.status(200).send("Bienvenido al Pokedex");
+});
+
+app.post('/pokemon',  (req, res, next)=>{
+    return res.status(200).send(req.body);
 });
 
 app.get('/pokemon',  (req, res, next)=>{
@@ -32,7 +40,7 @@ app.get('/pokemon/:name([A-Za-z]+)',  (req, res, next)=>{
     const name = req.params.name;
     //operador ternario: condicion ? valir si verdadero : valor si falso
     const pkm = pokemon.filter((p)=>{
-        return (p.name.toUpperCase() == name.toUpperCase()) ?  p : null;
+        return (p.name.toUpperCase() == name.toUpperCase()) &&  p;
     });
     (pkm.length > 0) ? 
         res.status(200).send(pkm) : 
