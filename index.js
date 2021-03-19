@@ -14,37 +14,29 @@ const { pokemon } = require('./pokedex.json');
  */
 
 app.get('/',(req, res, next) =>{
-    res.status(200);
-    res.send("Bienvenido al Pokedex");
+    return res.status(200).send("Bienvenido al Pokedex");
 });
 
-app.get('/pokemon/all',  (req, res, next)=>{
-    res.status(200);
-    res.send(pokemon);
+app.get('/pokemon',  (req, res, next)=>{
+    return res.status(200).send(pokemon);
 });
 
 app.get('/pokemon/:id([0-9]{1,3})',  (req, res, next)=>{
     const id = req.params.id - 1;
-    if(id >= 0 && id <= 150){
-        res.status(200);
-        res.send(pokemon[req.params.id - 1]);
-    } else{
-        res.status(404);
-        res.send("Pokemon no encontrado");
-    }
-    
+    (id >= 0 && id <= 150) ?
+        res.status(200).send(pokemon[req.params.id - 1]) :
+        res.status(404).send("Pokemon no encontrado");
 });
 
-app.get('/pokemon/:name',  (req, res, next)=>{
+app.get('/pokemon/:name([A-Za-z]+)',  (req, res, next)=>{
     const name = req.params.name;
-    for (let i = 0; i < pokemon.length; i++) {
-        if (name == pokemon[i].name) {
-            res.status(200);
-            res.send(pokemon[i]);
-        }
-    }
-    res.status(404);
-    res.send("Pokemon no encontrado");
+    //operador ternario: condicion ? valir si verdadero : valor si falso
+    const pkm = pokemon.filter((p)=>{
+        return (p.name.toUpperCase() == name.toUpperCase()) ?  p : null;
+    });
+    (pkm.length > 0) ? 
+        res.status(200).send(pkm) : 
+        res.status(404).send("Pokemon no encontrado");
 });
 
 app.listen(process.env.PORT || 3000,() => {
