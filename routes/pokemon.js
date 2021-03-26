@@ -9,15 +9,15 @@ pokemon.post('/', (req, res, next)=>{
 
 pokemon.get('/', async (req, res, next)=>{
     const pk = await db.query("SELECT * FROM pokemon");
-    return res.status(200).json(pk);
+    return res.status(200).json({code: 1, message: pk});
 });
 
 pokemon.get('/:id([0-9]{1,3})', async (req, res, next)=>{
     const pk = await db.query("SELECT * FROM pokemon");
     const id = req.params.id - 1;
-    (id >= 0 && id <= 150) ?
-        res.status(200).send(pk[req.params.id - 1]) :
-        res.status(404).send("Pokemon no encontrado");
+    (id >= 0 && id <= 722) ?
+        res.status(200).json({code: 1, message: pk[req.params.id - 1]}) :
+        res.status(404).json({code: 1, message: "Pokemon no encontrado"});
 });
 
 pokemon.get('/:name([A-Za-z]+)', async (req, res, next)=>{
@@ -28,8 +28,8 @@ pokemon.get('/:name([A-Za-z]+)', async (req, res, next)=>{
         return (p.pok_name.toUpperCase() == name.toUpperCase()) && p;
     });
     (pkm.length > 0) ? 
-        res.status(200).send(pkm) : 
-        res.status(404).send("Pokemon no encontrado");
+        res.status(200).json({code: 1, message: pkm}) : 
+        res.status(404).json({code: 1, message: "Pokemon no encontrado"});
 });
 
 
