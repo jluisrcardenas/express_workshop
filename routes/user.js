@@ -13,7 +13,7 @@ user.post('/signin', async (req, res, next)=>{
         if(rows.affectedRows == 1){
             return res.status(201).json({code: 201, message: "Usuario registrado correctamente"});
         }
-        return res.status(500).json({code: 500, message: "Ocurrio un error"});
+        return res.status(401).json({code: 401, message: "Ocurrio un error"});
     }
     return res.status(500).json({code: 500, message: "Campos incompletos"});
 });
@@ -32,7 +32,7 @@ user.post('/login', async (req, res, next)=>{
             }, "debugkey")
             return res.status(200).json({code: 200, message: token});
         }else{
-            return res.status(401).json({code: 401, message: "Usuario y/o Contraseña Incorrectos"});
+            return res.status(200).json({code: 401, message: "Usuario y/o Contraseña Incorrectos"});
         }
     }
     return res.status(500).json({code: 500, message: "Campos incompletos"});
